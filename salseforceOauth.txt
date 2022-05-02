@@ -1,0 +1,48 @@
+pip install django-salesforce-oauth
+
+
+INSTALLED_APPS = [
+    
+    "django_salesforce_oauth",
+]
+
+
+SCOPES = "YOUR SCOPES"  # space delimited, e.g., "id api refresh_token"
+SFDC_CONSUMER_KEY = "YOUR KEY"
+SFDC_CONSUMER_SECRET = "YOUR SECRET"
+OAUTH_REDIRECT_URI = "{YOUR DOMAIN}/oauth/callback/"
+
+# Optional, but Django provides a default you likely don't want
+LOGIN_REDIRECT_URL = "/"
+
+
+from django.urls import path, include
+
+urlpatterns = [
+    # ...
+    path("oauth/", include("django_salesforce_oauth.urls")),
+]
+
+
+from django.shortcuts import redirect
+
+def your_view(request):
+    return redirect("oauth")  # or "oauth-sandbox"
+
+<a href="{% url 'oauth' %}" class="btn btn-primary">Login</a>
+
+
+CUSTOM_CALLBACK = "path.to.module.your_callback_function"
+
+# urls.py
+
+from django_salesforce_oauth.views import oauth_callback
+
+urlpatterns = [
+    # ...
+    # pass {"domain": "test"} to use a sandbox
+    path("my/custom/url", oauth_callback, {"domain": "login"}, name="custom-oauth-callback"),
+]
+
+SFDC_CONSUMER_KEY=some_key
+SFDC_CONSUMER_SECRET=secret_stuff
